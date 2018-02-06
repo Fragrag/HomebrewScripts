@@ -5,7 +5,7 @@ import os
 ItemExtensions = '.mp4', '.avi', '.mkv' # List of possible video formats 
 ScriptPath = os.path.dirname(os.path.realpath(__file__)) # Current location of script
 #TargetDirectory = ScriptPath + '\Videos' # Designates directory to scan. Needs to be changed for production
-TargetDirectory = r'\\HARYONAS\media\video\TV'
+TargetDirectory = r'\\HARYONAS\media\video'
 TargetDirectoryfsencode = os.fsencode(TargetDirectory)
 ffprobeArguments = " -v error -select_streams v:0 -show_entries stream=codec_name -of default=noprint_wrappers=1:nokey=1 " # FFProbe arguments to output only the codec
 
@@ -30,7 +30,7 @@ with open('output.csv', 'w') as csvfile:
 		
 			else: # If file does not end in a video format, throw error and does not add it to the list.
 				print("Error!")
-				print(os.path.join(r, item) + " does not end in " + ', '.join(ItemExtensions))
+				print(os.path.join(root, item) + " does not end in " + ', '.join(ItemExtensions))
 				print("\n")
 		
 		
