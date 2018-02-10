@@ -9,9 +9,16 @@
 
 import csv
 import os
+import sys
 
 # Initialising start variables
-TargetDirectory = r'\\HARYONAS\media\video'
+try:
+	TargetDirectory = sys.argv[1]
+	assert TargetDirectory
+except:
+	print("Please specify a folder")
+	sys.exit(1)
+	
 ffprobeArguments = " -v error -select_streams v:0 -show_entries stream=codec_name -of default=noprint_wrappers=1:nokey=1 "
 
 # Initialises and creates a new .csv, setting up basic parameters to work with it
