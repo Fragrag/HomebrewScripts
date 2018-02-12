@@ -1,0 +1,6 @@
+# Sandbox test video folder
+Videos/*
+
+# Script output
+metadata.txt
+output.csv
