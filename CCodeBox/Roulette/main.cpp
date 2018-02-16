@@ -21,7 +21,7 @@ void PrintIntro();
 void PlayGame();
 FBetNumberAndType ReceiveChosenBet();
 int32 ReceiveValidWager();
-int32 SpinTheBall();
+int32 SpinTheWheel();
 
 bool AskToPlayAgain();
 void PrintGameSummary();
@@ -147,7 +147,7 @@ int32 ReceiveValidWager()
 	return ValidWager;
 }
 
-int32 SpinTheBall() 
+int32 SpinTheWheel() 
 {
 	int32 SpinResult;
 

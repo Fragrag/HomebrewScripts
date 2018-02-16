@@ -4,14 +4,16 @@
 #include <map>
 #include <iostream>
 #include <sstream> // Handles strings 
+#include <list>
 
 #define TMap std::map
+#define TList std::list
 
 FRouletteGame::FRouletteGame() { Reset(); } // Default constructor
 
 void FRouletteGame::Reset() //TODO Check if this is at all necessary
 {
-	SpinResult = rand() % 37; // Spins the wheel and chooses and random number in between 0 and 36
+	TMap<int32, EBetType> WinningBetTypes{ }; //Clear
 }
 
 int32 FRouletteGame::ValidatedIntInput()
@@ -88,6 +90,63 @@ ESingleValidity FRouletteGame::CheckSingleValidity(int32 Bet) const
 		return ESingleValidity::OK;
 	}
 }
+
+// Takes in SpinResult and goes through multiple conditions. If true add EBetType to it.
+void FRouletteGame::SetWinningBetTypes(int32 SpinResult)
+{
+	int FirstColumn[] = { 1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34 };
+	int SecondColumn[] = { 2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35 };
+	int ThirdColumn[] = { 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36 };
+
+	if (SpinResult >= 1 && SpinResult <= 18)
+	{
+		WinningBetTypes.push_back(EBetType::Low);
+	}
+	else {}
+
+	if (SpinResult >= 19 && SpinResult <= 36)
+	{
+		WinningBetTypes.push_back(EBetType::High);
+	}
+	else {}
+
+	if (SpinResult >= 1 && SpinResult <= 12)
+	{
+		WinningBetTypes.push_back(EBetType::FirstDozen);
+	}
+	else {}
+
+	if (SpinResult >= 13 && SpinResult <= 24)
+	{
+		WinningBetTypes.push_back(EBetType::SecondDozen);
+	}
+	else {}
+
+	if (SpinResult >= 25 && SpinResult <= 36)
+	{
+		WinningBetTypes.push_back(EBetType::ThirdDozen);
+	}
+	else {}
+
+	if (std::find(std::begin(FirstColumn), std::end(FirstColumn), SpinResult))
+	{
+		WinningBetTypes.push_back(EBetType::FirstColumn);
+	}
+	else {}
+
+	if (std::find(std::begin(SecondColumn), std::end(SecondColumn), SpinResult))
+	{
+		WinningBetTypes.push_back(EBetType::SecondColumn);
+	}
+	else {}
+
+	if (std::find(std::begin(ThirdColumn), std::end(ThirdColumn), SpinResult))
+	{
+		WinningBetTypes.push_back(EBetType::ThirdColumn);
+	}
+	else {}
+}
+
 
 // Take in a validated bet and return its type
 EBetType FRouletteGame::CheckBetType(int32 ValidatedBet) const

@@ -1,9 +1,14 @@
 #pragma once
 #include <string>
 #include <map>
+#include <array>
+#include <list>
+#include <vector>
 #include <sstream> // Handles strings 
 
 #define TMap std::map
+#define TArray array
+#define TList std::list
 
 using FString = std::string;
 using int32 = int;
@@ -70,11 +75,10 @@ public:
 	EBetValidity CheckBetValidity(int32) const;
 	ESingleValidity CheckSingleValidity(int32) const;
 
-
+	void SetWinningBetTypes(int32 SpinResult);
 
 private:
 	int32 SpinResult;
-	TMap<int32, EBetType> NumberToBetType {	};
-
+	std::vector<EBetType> WinningBetTypes;
 };
 
