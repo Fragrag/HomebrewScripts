@@ -10,6 +10,7 @@ main.cpp will form the skeleton of the roulette game while FRouletteGame.h and F
 #include <string>
 #include <sstream> // Handles strings 
 #include <list>
+#include <time.h>
 #include "FRouletteGame.h"
 
 
@@ -158,6 +159,8 @@ int32 ReceiveValidWager()
 int32 SpinTheWheel() 
 {
 	int32 SpinResult;
+
+	srand(time(NULL)); // Set random seed as based on time
 
 	SpinResult = rand() % 37;
 

@@ -39,7 +39,6 @@ enum class EBetValidity
 	Out_Of_Bounds
 };
 
-
 enum class ESingleValidity
 {
 	Invalid_Status,
