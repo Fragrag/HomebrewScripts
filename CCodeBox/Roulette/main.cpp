@@ -18,7 +18,7 @@ using int32 = int;
 // Prototyping functions outside a class
 void PrintIntro();
 void PlayGame();
-int32 ReceiveValidBet();
+FBetSingleNumberAndType ReceiveValidBet();
 int32 ReceiveValidWager();
 bool AskToPlayAgain();
 void PrintGameSummary();
@@ -27,17 +27,13 @@ FRouletteGame RouletteGame; // Instantiate a new game, which we will re-use
 
 int main() 
 {
-	int32 TestFunction = 0;
-
 	PrintIntro();
-	TestFunction = ReceiveValidBet();
-
-	std::cout << TestFunction << std::endl;
-
+	PlayGame();
+		
 	return 0;
 }
 
-void PrintIntro() // TODO Fill PrintIntro()
+void PrintIntro()
 {
 	std::cout << "Welcome" << std::endl;
 	std::cout << "Let's play roulette!" << std::endl;
@@ -48,17 +44,25 @@ void PrintIntro() // TODO Fill PrintIntro()
 
 void PlayGame() // TODO Fill PlayGame()
 {
+	FBetSingleNumberAndType BetType = ReceiveValidBet();	// ReceiveValidBet()	
+	
+	// ReceiveValidWager
+	// Check result to bet and wager
 	return;
 }
 
-// Receives a bet, checks its validity and returns it if it is valid
-int32 ReceiveValidBet() 
+// Receives a bet, checks its validity and returns the chosen bet, single number and type
+FBetSingleNumberAndType ReceiveValidBet()
 {
-	// Ask the player to choose the type of bet, if player chooses 'Single' prompt the player further for the number of the square
+	// Ask the player to choose the type of bet
 	// Initialise variables
-	EBetValidity StatusBetValidity = EBetValidity::Invalid_Status;
-	FString InputString = "";
+	EBetValidity ChosenBetValidity = EBetValidity::Invalid_Status;
 	int32 ChosenBet = 0;
+	FString InputString = "";
+
+	int32 ChosenSingleNumber;
+	ESingleValidity ChosenSingleNumberValidity = ESingleValidity::Invalid_Status;
+	EBetType ChosenBetType = EBetType::Invalid_Status;
 
 	std::cout << "Choose your bet!" << std::endl;
 	std::cout << "1. Single" << std::endl;
@@ -75,10 +79,12 @@ int32 ReceiveValidBet()
 	std::cout << "12. Second column" << std::endl;
 	std::cout << "13. Third column" << std::endl;
 
+
+	// Take input for bet type
 	do {
 		// Get input from player in a safe way
 		while (true) {
-			std::getline(std::cin, InputString); 
+			std::getline(std::cin, InputString);
 
 			// The following lines will convert from string to number safely
 			std::stringstream myStream(InputString);
@@ -87,9 +93,9 @@ int32 ReceiveValidBet()
 			std::cout << "Invalid input, please put in a number" << std::endl;
 		}
 
-		StatusBetValidity = RouletteGame.CheckBetValidity(ChosenBet);
+		ChosenBetValidity = RouletteGame.CheckBetValidity(ChosenBet);
 
-		switch (StatusBetValidity) 
+		switch (ChosenBetValidity)
 		{
 		case EBetValidity::Out_Of_Bounds:
 			std::cout << "Please enter a number between 1 and 13" << std::endl;
@@ -101,9 +107,43 @@ int32 ReceiveValidBet()
 			break;
 		}
 
-	} while (StatusBetValidity != EBetValidity::OK); // Keep looping until we get no error
+	} while (ChosenBetValidity != EBetValidity::OK); // Keep looping until we get no error
 
-	return ChosenBet;
+	ChosenBetType = RouletteGame.CheckBetType(ChosenBet);
+
+	// Take input for the chosen single number to bet on
+	if (ChosenBetType == EBetType::Single) {
+
+		do {
+			std::cout << "You have chosen to bet on a single number" << std::endl;
+			std::cout << "Please choose a number between 0 and 36" << std::endl;
+			while (true) {
+				std::getline(std::cin, InputString);
+
+				// The following lines will convert from string to number safely
+				std::stringstream myStream(InputString);
+				if (myStream >> ChosenSingleNumber)
+					break;
+				std::cout << "Invalid input, please put in a number" << std::endl;
+			}
+
+			ChosenSingleNumberValidity = RouletteGame.CheckSingleValidity(ChosenSingleNumber);
+
+			switch (ChosenSingleNumberValidity)
+			{
+			case ESingleValidity::Out_Of_Bounds:
+				std::cout << "Please enter a number between 0 and 36" << std::endl;
+				break;
+			case ESingleValidity::Not_Integer: // Should never pop up in this version
+				std::cout << "Invalid input, please put in a number" << std::endl;
+				break;
+			default:
+				break;
+			}
+		} while (ChosenSingleNumberValidity != ESingleValidity::OK);
+
+		return { ChosenBet, ChosenSingleNumber, ChosenBetType };
+	}
 }
 
 int32 ReceiveValidWager()
