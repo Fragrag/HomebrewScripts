@@ -1,9 +1,3 @@
-/*
-Pseudocode
-This project's structure will be based on UnrealCourse's BullCowGame
-main.cpp will form the skeleton of the roulette game while FRouletteGame.h and FRouletteGame.cpp will be the meat.
-*/
-
 #pragma once
 
 #include <iostream>
@@ -13,6 +7,17 @@ main.cpp will form the skeleton of the roulette game while FRouletteGame.h and F
 #include <time.h>
 #include "FRouletteGame.h"
 
+/*
+First working version of roulette
+
+TODO Make game out of this
+
+Do this by adding a budget, persistantly keeping winnings and losses through each session.
+
+TODO Make a chance simulator out of this
+
+Do this by have it loop automatically, keep wins, losses, bet types... And calculate statistics
+*/
 
 // Make syntax Unreal friendly
 using FText = std::string;
@@ -25,37 +30,52 @@ int32 ReceiveValidWager();
 int32 SpinTheWheel();
 
 bool AskToPlayAgain();
-void PrintGameSummary();
+
+int32 CheckVictory(FBetNumberAndType ChosenBet, int32 Wager, int32 SpinResult, std::vector<EBetType> SpinResultBytes);
 
 FRouletteGame RouletteGame; // Instantiate a new game, which we will re-use
 
 int main() 
 {
+	bool bPlayAgain = false;
+	do 
+	{
 	PrintIntro();
 	PlayGame();
+	bPlayAgain = AskToPlayAgain();
+	} while (bPlayAgain);
 		
 	return 0;
 }
 
 void PrintIntro()
 {
+	std::cout << "" << std::endl;
 	std::cout << "Welcome" << std::endl;
 	std::cout << "Let's play roulette!" << std::endl;
 	std::cout << "Put in your wager and pick a bet!" << std::endl;
+	std::cout << "" << std::endl;
 
 	return;
 }
 
-void PlayGame() // TODO Fill PlayGame()
+void PlayGame()
 {
-	FBetNumberAndType BetType = ReceiveChosenBet();	// ReceiveValidBet()
+	int32 Winnings = 0;
+	RouletteGame.Reset();
+	FBetNumberAndType ChosenBet = ReceiveChosenBet();	// ReceiveValidBet()
 	int32 Wager = ReceiveValidWager();
 	int32 SpinResult = SpinTheWheel();
+	
 	RouletteGame.SetSpinResultBetTypes(SpinResult);
+	std::cout << "" << std::endl;
 	std::cout << "The spin result is " << SpinResult << std::endl;
 	std::vector<EBetType> SpinResultBetTypes = RouletteGame.SpinResultBetTypes;
-	
-	// Check result to bet and wager
+
+	Winnings = CheckVictory(ChosenBet, Wager, SpinResult, SpinResultBetTypes);
+
+	std::cout << "" << std::endl;
+		
 	return;
 }
 
@@ -63,6 +83,7 @@ void PlayGame() // TODO Fill PlayGame()
 FBetNumberAndType ReceiveChosenBet()
 {
 	// Prompt player to put in intro
+	std::cout << "" << std::endl;
 	std::cout << "Choose your bet!" << std::endl;
 	std::cout << "1. Single" << std::endl;
 	std::cout << "2. Low" << std::endl;
@@ -77,14 +98,15 @@ FBetNumberAndType ReceiveChosenBet()
 	std::cout << "11. First column" << std::endl;
 	std::cout << "12. Second column" << std::endl;
 	std::cout << "13. Third column" << std::endl;
+	std::cout << "" << std::endl;
 
 	// Initialise variables
 	int32 ChosenBet = 0;
 	EBetValidity ChosenBetValidity = EBetValidity::Invalid_Status;
 	EBetType ChosenBetType = EBetType::Invalid_Status;
 
-	int32 ChosenSingleNumber = 0;
-	ESingleValidity ChosenSingleNumberValidity = ESingleValidity::Invalid_Status;
+	int32 ChosenNumber = 0;
+	ESingleValidity ChosenNumberValidity = ESingleValidity::Invalid_Status;
 
 	FString InputString = "";
 
@@ -120,11 +142,11 @@ FBetNumberAndType ReceiveChosenBet()
 			std::cout << "You have chosen to bet on a single number" << std::endl;
 			std::cout << "Please choose a number between 0 and 36" << std::endl;
 			
-			ChosenSingleNumber = RouletteGame.ValidatedIntInput();
+			ChosenNumber = RouletteGame.ValidatedIntInput();
 
-			ChosenSingleNumberValidity = RouletteGame.CheckSingleValidity(ChosenSingleNumber);
+			ChosenNumberValidity = RouletteGame.CheckSingleValidity(ChosenNumber);
 
-			switch (ChosenSingleNumberValidity)
+			switch (ChosenNumberValidity)
 			{
 			case ESingleValidity::Out_Of_Bounds:
 				std::cout << "Please enter a number between 0 and 36" << std::endl;
@@ -135,9 +157,9 @@ FBetNumberAndType ReceiveChosenBet()
 			default:
 				break;
 			}
-		} while (ChosenSingleNumberValidity != ESingleValidity::OK);
+		} while (ChosenNumberValidity != ESingleValidity::OK);
 
-		return { ChosenBet, ChosenSingleNumber, ChosenBetType };
+		return { ChosenBet, ChosenNumber, ChosenBetType };
 	}
 	else 
 	{
@@ -150,7 +172,7 @@ int32 ReceiveValidWager()
 {
 	int32 ValidWager = 0;
 	
-	std::cout << "Now put in your wager!" << std::endl;
+	std::cout << "Now put in your wager!: ";
 	ValidWager = RouletteGame.ValidatedIntInput();
 
 	return ValidWager;
@@ -161,26 +183,56 @@ int32 SpinTheWheel()
 	int32 SpinResult;
 
 	srand(time(NULL)); // Set random seed as based on time
-
 	SpinResult = rand() % 37;
 
 	return SpinResult;
 }
 
-/* TODO Work out how to compare SpinResult with ChosenBet and see winnings
-
-So we create a function that will take in the SpinResult and creates a list of appropriate EBetTypes;
-Then we look at the ChosenBet and if its EBetTypes is in the list, then we can say that the player won something.
-
-*/
-bool AskToPlayAgain() // TODO Fill AskToPlayAgain()
+bool AskToPlayAgain() 
 {
-	return false;
+	std::cout << "Do you want to play again? (y/n)";
+	FText Response = "";
+	std::getline(std::cin, Response);
+	return (Response[0] == 'y') || (Response[0] == 'Y');
 }
 
-void PrintGameSummary() // TODO Fill PrintGameSummary()
+int32 CheckVictory(FBetNumberAndType ChosenBet, int32 Wager, int32 SpinResult, std::vector<EBetType> SpinResultBetTypes)
 {
-	// In this function we will look at the bet, the wager and where the ball landed. 
-	// We compare all of these values and calculate the wins and losses 
-	return;
+	int32 Winnings = 0;
+
+	if (ChosenBet.BetType == EBetType::Single)	// If the ChosenBetType is Single,
+	{
+		if (ChosenBet.Number == SpinResult)		// then we compare the ChosenNumber with the SpinResult
+		{
+			Winnings = RouletteGame.CalculateWinnings(ChosenBet, Wager);	// If it's the same, jackpot!
+			std::cout << "You win!" << std::endl;
+			std::cout << "You wagered " << Wager << std::endl;
+			std::cout << "And you won " << Winnings << std::endl;
+		}
+		else
+		{
+			Winnings = 0;	// If it's not, loss
+			std::cout << "You lost!" << std::endl;
+			std::cout << "You wagered " << Wager << std::endl;
+			std::cout << "And you won " << Winnings << std::endl;
+		}
+	}
+	else // Else we have to compare the ChosenBetType to SpinResultBetTypes
+	{
+		if (std::find(std::begin(SpinResultBetTypes), std::end(SpinResultBetTypes), ChosenBet.BetType) != std::end(SpinResultBetTypes)) // if the former is in the latter, it is a win
+		{
+			Winnings = RouletteGame.CalculateWinnings(ChosenBet, Wager); // We calculate the winnings then
+			std::cout << "You win!" << std::endl;
+			std::cout << "You wagered " << Wager << std::endl;
+			std::cout << "And you won " << Winnings << std::endl;
+		}
+		else
+		{
+			Winnings = 0;	// Else, it's a loss
+			std::cout << "You lost!" << std::endl;
+			std::cout << "You wagered " << Wager << std::endl;
+			std::cout << "And you won " << Winnings << std::endl;
+		}
+	}
+	return Winnings;
 }

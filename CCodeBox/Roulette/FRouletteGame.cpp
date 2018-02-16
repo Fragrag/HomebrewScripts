@@ -108,8 +108,6 @@ void FRouletteGame::SetSpinResultBetTypes(int32 SpinResult)
 	int FirstColumn[] = { 1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34 };
 	int SecondColumn[] = { 2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35 };
 	int ThirdColumn[] = { 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36 };
-	
-	// TODO: Check SetSpinResultBetTyper for Single
 
 	// Low and high
 	if (SpinResult >= 1 && SpinResult <= 18)

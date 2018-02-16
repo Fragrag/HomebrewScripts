@@ -1,4 +1,5 @@
 #pragma once
+
 #include <string>
 #include <map>
 #include <array>
@@ -35,7 +36,7 @@ enum class EBetValidity
 {
 	Invalid_Status,
 	OK,
-	Not_Integer, //Variable type already goes through a check in the function
+	Not_Integer,	//Variable type check already done in FRouletteGame::ValidatedIntInput()
 	Out_Of_Bounds
 };
 
@@ -43,15 +44,8 @@ enum class ESingleValidity
 {
 	Invalid_Status,
 	OK,
-	Not_Integer,
+	Not_Integer,	//Variable type check already done in FRouletteGame::ValidatedIntInput()
 	Out_Of_Bounds
-};
-
-enum class EWager
-{
-	Invalid_Status,
-	OK,
-	Not_Integer
 };
 
 struct FBetNumberAndType
@@ -81,4 +75,3 @@ public:
 private:
 	int32 SpinResult;
 };
-
