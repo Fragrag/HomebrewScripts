@@ -49,6 +49,10 @@ void PlayGame() // TODO Fill PlayGame()
 {
 	FBetNumberAndType BetType = ReceiveChosenBet();	// ReceiveValidBet()
 	int32 Wager = ReceiveValidWager();
+	int32 SpinResult = SpinTheWheel();
+	RouletteGame.SetSpinResultBetTypes(SpinResult);
+	std::cout << "The spin result is " << SpinResult << std::endl;
+	std::vector<EBetType> SpinResultBetTypes = RouletteGame.SpinResultBetTypes;
 	
 	// Check result to bet and wager
 	return;
@@ -134,6 +138,10 @@ FBetNumberAndType ReceiveChosenBet()
 
 		return { ChosenBet, ChosenSingleNumber, ChosenBetType };
 	}
+	else 
+	{
+		return { ChosenBet, NULL, ChosenBetType };
+	}
 }
 
 // Ask the player to input his wager
@@ -141,7 +149,7 @@ int32 ReceiveValidWager()
 {
 	int32 ValidWager = 0;
 	
-	std::cout << "Now put in your wager!";
+	std::cout << "Now put in your wager!" << std::endl;
 	ValidWager = RouletteGame.ValidatedIntInput();
 
 	return ValidWager;

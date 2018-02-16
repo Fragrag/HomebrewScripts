@@ -75,10 +75,11 @@ public:
 	EBetValidity CheckBetValidity(int32) const;
 	ESingleValidity CheckSingleValidity(int32) const;
 
-	void SetWinningBetTypes(int32 SpinResult);
+	void SetSpinResultBetTypes(int32 SpinResult);
+
+	std::vector<EBetType> SpinResultBetTypes;
 
 private:
 	int32 SpinResult;
-	std::vector<EBetType> WinningBetTypes;
 };
 
