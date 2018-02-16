@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <map>
+#include <sstream> // Handles strings 
 
 #define TMap std::map
 
@@ -49,18 +50,27 @@ enum class EWager
 	Not_Integer
 };
 
+struct FBetNumberAndType
+{
+	int32 Bet = 0;
+	int32 Number = NULL;
+	EBetType BetType = EBetType::Invalid_Status;
+};
+
 class FRouletteGame
 {
 public:
 	FRouletteGame(); // Constructor
 
 	void Reset(); // Set starting conditions of the game
+	int32 ValidatedIntInput();
+	int32 CalculateWinnings(FBetNumberAndType ValidatedBet, int32 Wager);
 
 	EBetType CheckBetType(int32) const; 
 	EBetValidity CheckBetValidity(int32) const;
 	ESingleValidity CheckSingleValidity(int32) const;
 
-	EBetType CheckWagerValidity(int32) const;
+
 
 private:
 	int32 SpinResult;
@@ -68,9 +78,3 @@ private:
 
 };
 
-struct FBetSingleNumberAndType
-{
-	int32 Bet = 0;
-	int32 Number = NULL;
-	EBetType BetType = EBetType::Invalid_Status;
-};

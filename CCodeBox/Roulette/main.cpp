@@ -8,18 +8,21 @@ main.cpp will form the skeleton of the roulette game while FRouletteGame.h and F
 
 #include <iostream>
 #include <string>
-#include "FRouletteGame.h"
 #include <sstream> // Handles strings 
+#include <list>
+#include "FRouletteGame.h"
+
 
 // Make syntax Unreal friendly
 using FText = std::string;
 using int32 = int;
 
-// Prototyping functions outside a class
 void PrintIntro();
 void PlayGame();
-FBetSingleNumberAndType ReceiveValidBet();
+FBetNumberAndType ReceiveChosenBet();
 int32 ReceiveValidWager();
+int32 SpinTheBall();
+
 bool AskToPlayAgain();
 void PrintGameSummary();
 
@@ -44,26 +47,17 @@ void PrintIntro()
 
 void PlayGame() // TODO Fill PlayGame()
 {
-	FBetSingleNumberAndType BetType = ReceiveValidBet();	// ReceiveValidBet()	
+	FBetNumberAndType BetType = ReceiveChosenBet();	// ReceiveValidBet()
+	int32 Wager = ReceiveValidWager();
 	
-	// ReceiveValidWager
 	// Check result to bet and wager
 	return;
 }
 
 // Receives a bet, checks its validity and returns the chosen bet, single number and type
-FBetSingleNumberAndType ReceiveValidBet()
+FBetNumberAndType ReceiveChosenBet()
 {
-	// Ask the player to choose the type of bet
-	// Initialise variables
-	EBetValidity ChosenBetValidity = EBetValidity::Invalid_Status;
-	int32 ChosenBet = 0;
-	FString InputString = "";
-
-	int32 ChosenSingleNumber;
-	ESingleValidity ChosenSingleNumberValidity = ESingleValidity::Invalid_Status;
-	EBetType ChosenBetType = EBetType::Invalid_Status;
-
+	// Prompt player to put in intro
 	std::cout << "Choose your bet!" << std::endl;
 	std::cout << "1. Single" << std::endl;
 	std::cout << "2. Low" << std::endl;
@@ -79,19 +73,22 @@ FBetSingleNumberAndType ReceiveValidBet()
 	std::cout << "12. Second column" << std::endl;
 	std::cout << "13. Third column" << std::endl;
 
+	// Initialise variables
+	int32 ChosenBet = 0;
+	EBetValidity ChosenBetValidity = EBetValidity::Invalid_Status;
+	EBetType ChosenBetType = EBetType::Invalid_Status;
+
+	int32 ChosenSingleNumber = 0;
+	ESingleValidity ChosenSingleNumberValidity = ESingleValidity::Invalid_Status;
+
+	FString InputString = "";
 
 	// Take input for bet type
-	do {
+	do 
+	{
 		// Get input from player in a safe way
-		while (true) {
-			std::getline(std::cin, InputString);
 
-			// The following lines will convert from string to number safely
-			std::stringstream myStream(InputString);
-			if (myStream >> ChosenBet)
-				break;
-			std::cout << "Invalid input, please put in a number" << std::endl;
-		}
+		ChosenBet = RouletteGame.ValidatedIntInput();
 
 		ChosenBetValidity = RouletteGame.CheckBetValidity(ChosenBet);
 
@@ -111,21 +108,14 @@ FBetSingleNumberAndType ReceiveValidBet()
 
 	ChosenBetType = RouletteGame.CheckBetType(ChosenBet);
 
-	// Take input for the chosen single number to bet on
-	if (ChosenBetType == EBetType::Single) {
-
+	// If the chosen bet type is Single, prompt input for the chosen single number to bet on
+	if (ChosenBetType == EBetType::Single) 
+	{
 		do {
 			std::cout << "You have chosen to bet on a single number" << std::endl;
 			std::cout << "Please choose a number between 0 and 36" << std::endl;
-			while (true) {
-				std::getline(std::cin, InputString);
-
-				// The following lines will convert from string to number safely
-				std::stringstream myStream(InputString);
-				if (myStream >> ChosenSingleNumber)
-					break;
-				std::cout << "Invalid input, please put in a number" << std::endl;
-			}
+			
+			ChosenSingleNumber = RouletteGame.ValidatedIntInput();
 
 			ChosenSingleNumberValidity = RouletteGame.CheckSingleValidity(ChosenSingleNumber);
 
@@ -146,12 +136,32 @@ FBetSingleNumberAndType ReceiveValidBet()
 	}
 }
 
+// Ask the player to input his wager
 int32 ReceiveValidWager()
 {
-	// Ask the player to input his wager
-	return 0;
+	int32 ValidWager = 0;
+	
+	std::cout << "Now put in your wager!";
+	ValidWager = RouletteGame.ValidatedIntInput();
+
+	return ValidWager;
 }
 
+int32 SpinTheBall() 
+{
+	int32 SpinResult;
+
+	SpinResult = rand() % 37;
+
+	return SpinResult;
+}
+
+/* TODO Work out how to compare SpinResult with ChosenBet and see winnings
+
+So we create a function that will take in the SpinResult and creates a list of appropriate EBetTypes;
+Then we look at the ChosenBet and if its EBetTypes is in the list, then we can say that the player won something.
+
+*/
 bool AskToPlayAgain() // TODO Fill AskToPlayAgain()
 {
 	return false;
