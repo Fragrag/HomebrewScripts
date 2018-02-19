@@ -29,6 +29,7 @@ FBetNumberAndType ReceiveChosenBet();
 int32 ReceiveValidWager();
 int32 SpinTheWheel();
 
+int32 Winnings = 0;
 bool AskToPlayAgain();
 
 int32 CheckVictory(FBetNumberAndType ChosenBet, int32 Wager, int32 SpinResult, std::vector<EBetType> SpinResultBytes);
@@ -38,6 +39,7 @@ FRouletteGame RouletteGame; // Instantiate a new game, which we will re-use
 int main() 
 {
 	bool bPlayAgain = false;
+
 	do 
 	{
 	PrintIntro();
@@ -50,7 +52,6 @@ int main()
 
 void PrintIntro()
 {
-	std::cout << "" << std::endl;
 	std::cout << "Welcome" << std::endl;
 	std::cout << "Let's play roulette!" << std::endl;
 	std::cout << "Put in your wager and pick a bet!" << std::endl;
@@ -61,8 +62,8 @@ void PrintIntro()
 
 void PlayGame()
 {
-	int32 Winnings = 0;
 	RouletteGame.Reset();
+	std::cout << "Your total winnings are " << Winnings << std::endl;
 	FBetNumberAndType ChosenBet = ReceiveChosenBet();	// ReceiveValidBet()
 	int32 Wager = ReceiveValidWager();
 	int32 SpinResult = SpinTheWheel();
@@ -72,7 +73,9 @@ void PlayGame()
 	std::cout << "The spin result is " << SpinResult << std::endl;
 	std::vector<EBetType> SpinResultBetTypes = RouletteGame.SpinResultBetTypes;
 
-	Winnings = CheckVictory(ChosenBet, Wager, SpinResult, SpinResultBetTypes);
+	Winnings = Winnings + CheckVictory(ChosenBet, Wager, SpinResult, SpinResultBetTypes);
+
+	std::cout << "Your total winnings are " << Winnings << std::endl;
 
 	std::cout << "" << std::endl;
 		

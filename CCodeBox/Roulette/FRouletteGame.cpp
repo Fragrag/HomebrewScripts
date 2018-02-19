@@ -52,6 +52,14 @@ int32 FRouletteGame::CalculateWinnings(FBetNumberAndType ValidatedBet, int32 Wag
 	{
 		Winnings = Wager * 2;
 	}
+	else if (ValidatedBet.BetType == EBetType::Red || ValidatedBet.BetType == EBetType::Black)
+	{
+		Winnings = Wager * 2;
+	}
+	else if (ValidatedBet.BetType == EBetType::Even || ValidatedBet.BetType == EBetType::Odd)
+	{
+		Winnings = Wager * 2;
+	}
 	else if (ValidatedBet.BetType == EBetType::FirstDozen || ValidatedBet.BetType == EBetType::SecondDozen || ValidatedBet.BetType == EBetType::ThirdDozen)
 	{
 		Winnings = Wager * 3;
