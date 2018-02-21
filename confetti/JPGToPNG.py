@@ -17,5 +17,6 @@ for item in os.listdir(InputDirectory):
 
 		OpenedImage = PIL.Image.open(InputDirectory + "\\" + item)
 		OpenedImageFilename, OpenedImageFileExtension = os.path.splitext(InputDirectory + "\\" + item)
-		OpenedImage.save(OpenedImageFilename + ".png"[, 'png'[, optimize]])
+		OpenedImage.save(OpenedImageFilename + ".png", 'png', optimize=True)
 		OpenedImage.close()
+		print(OpenedImageFilename + " has been converted!")
