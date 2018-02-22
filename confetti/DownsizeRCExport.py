@@ -1,12 +1,16 @@
 ##########################################################################
 #                                                                        #
-# ImageExifData.py                                                       #
+# DownsizeRCExport.py                                                    #
 #                                                                        #
 # This script goes through images in a folder	          				 #
-# and returns the file's location, model and focal length to output.csv  #      
+# and downscales them to 20% of the original image size  				 #
+# And overwrites the original file in the same location					 #    
+# To repeat for clarity:												 #
+# THIS WILL OVERWRITE THE ORIGINAL FILE									 #
 #                                                                        #
+# Usage:																 #
+# python DownsizeRCExport.py "<FOLDER>"									 #
 ##########################################################################
-# EXIF Tags reference: https://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/EXIF.html
 # Dependencies: csv, os, sys, Pillow
 
 import csv
@@ -22,11 +26,31 @@ except:
 	sys.exit(1)
 
 	
-AcceptedFiles = '.psd', '.cr2', '.jpg', '.jpeg', '.dng', '.png'
+AcceptedFiles = '.jpg', '.jpeg', '.png'
 
 for item in os.listdir(InputDirectory):
 	if item.endswith(AcceptedFiles):
-		# Open the image and create a dict from the exif
 		OpenedImage = PIL.Image.open(InputDirectory + "\\" + item)
-		PIL.Image.save( "C:\\Users\\User\\Desktop\\RCDownSize\\" + OpenedImage, 'jpeg', quality=50)
-		PIL.Image.close(OpenedImage)
+		
+		OpenedImageWidth, OpenedImageHeight = OpenedImage.size
+		OpenedImageFilename, OpenedImageFileExtension = os.path.splitext(InputDirectory + "\\" + item)
+		
+		OpenedImage.thumbnail([OpenedImageWidth/5, OpenedImageHeight/5])
+		
+		if OpenedImageFileExtension == '.png':
+			OpenedImage.save(OpenedImageFilename + OpenedImageFileExtension, 'png', optimize=True)
+			
+		elif OpenedImageFileExtension == '.jpeg' or OpenedImageFileExtension == '.jpg':
+			OpenedImage.save(OpenedImageFilename + OpenedImageFileExtension)
+			
+		else:
+			print("Not .png or .jpeg")
+		
+		OpenedImage.close()
+		print(item + " has been downsized!")
+		
+	else:
+		print("Not an image!")
+
+print(" ")
+print("All files in " + InputDirectory + " have been downsized")
