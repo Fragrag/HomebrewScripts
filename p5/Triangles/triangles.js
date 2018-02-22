@@ -1,17 +1,22 @@
 class equilateralTriangle
 {
-	constructor(px, py, r)
+	constructor(px, py, radius, angle)
 	{
-		this.circleOriginX = px;
-		this.circleOriginY = py;
-		this.circleRadius = r;
 		
-		float x2 = (circleRadius * Math.Cos(120 * PI / 180)) + circleOriginX;
-		float y2 = (circleRadius * Math.Cos(120 * PI / 180)) + circleOriginY;
-
-		float x3 = (circleRadius * Math.Cos(240 * PI / 180)) + circleOriginX;
-		float y3 = (circleRadius * Math.Cos(240 * PI / 180)) + circleOriginY;
+		fill(random(0, 255), random(0, 255), random(0, 255))
 		
-		this.triangle(px, py+r, x2, y2, x3, y3);
+		this.x1 = px + radius * cos(angle + 0 * 2 * (PI/3));
+		this.y1 = py + radius * sin(angle + 0 * 2 * (PI/3));
+		
+		this.x2 = px + radius * cos(angle + 1 * 2 * (PI/3));
+		this.y2 = py + radius * sin(angle + 1 * 2 * (PI/3));
+		
+		this.x3 = px + radius * cos(angle + 2 * 2 * (PI/3));
+		this.y3 = py + radius * sin(angle + 2 * 2 * (PI/3));
+		
+		triangle(this.x1, this.y1, this.x2, this.y2, this.x3, this.y3);
 	}
+
+	
 }
+	
