@@ -5,8 +5,8 @@ function preload(){
 }
 
 function setup() {
-	createCanvas(300, 300);
-	frameRate(1/5);
+	createCanvas(1050, 1050);
+	frameRate(12);
 	print(LoadedDigits);
 }
 
@@ -15,10 +15,11 @@ function draw(){
 }
 
 function CreateImage(NumberArray) {
-	var img = createImage(100, 100);
-	img.loadPixels();
-	for (var i = 0; i < img.width; i++){
-		for (var j = 0; j < img.height; j++){
+	var columns = 25;
+	var rows = 25;
+
+	for (var i = 0; i <= columns; i++){
+		for (var j = 0; j <= rows; j++){
 			
 			var RRand = abs(round(random(NumberArray.length -1)));
 			var GRand = abs(round(random(NumberArray.length -1)));
@@ -36,11 +37,11 @@ function CreateImage(NumberArray) {
 			print(G);
 			print(B);
 			
-			img.set(i, j, color(R, G, B));
+			fill(R, G, B);
+			// noStroke();
+			rect(i*25, j*25, 50, 50);
 		}
 	}
-	img.updatePixels();
-	image(img, 150, 150);
 }
 
 
