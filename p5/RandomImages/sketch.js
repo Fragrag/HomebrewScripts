@@ -5,18 +5,20 @@ function preload(){
 }
 
 function setup() {
-	createCanvas(1050, 1050);
+	createCanvas(500, 500);
 	frameRate(12);
 	print(LoadedDigits);
 }
 
 function draw(){
-	CreateImage(LoadedDigits);
+	CreateImage(LoadedDigits, 50, 50);
 }
 
-function CreateImage(NumberArray) {
-	var columns = 25;
-	var rows = 25;
+function CreateImage(NumberArray, height, width) {
+	var columns = 10;
+	var rows = 10;
+	var rectHeight = height;
+	var rectWidth = width;
 
 	for (var i = 0; i <= columns; i++){
 		for (var j = 0; j <= rows; j++){
@@ -38,8 +40,8 @@ function CreateImage(NumberArray) {
 			print(B);
 			
 			fill(R, G, B);
-			// noStroke();
-			rect(i*25, j*25, 50, 50);
+			noStroke();
+			rect(i*rectHeight, j*rectWidth, rectHeight, rectWidth);
 		}
 	}
 }
