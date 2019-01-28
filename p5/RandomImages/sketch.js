@@ -6,7 +6,7 @@ function preload(){
 
 function setup() {
 	createCanvas(500, 500);
-	frameRate(12);
+	frameRate(1);
 	print(LoadedDigits);
 }
 
@@ -31,6 +31,7 @@ function CreateImage(NumberArray, height, width) {
 			var G = map(NumberArray[GRand], 0, 99999, 0, 256);
 			var B = map(NumberArray[BRand], 0, 99999, 0, 256);
 			
+			// Debug outputs to console:
 			print(RRand);
 			print(GRand);
 			print(BRand);
