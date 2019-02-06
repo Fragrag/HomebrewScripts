@@ -1,1 +1,3 @@
-Placeholder
+# HomeBrewScripts
+
+Small scripts and programs
