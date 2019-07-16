@@ -1,4 +1,4 @@
-﻿##########################################################################################
+##########################################################################################
 # Powershell script to batch convert files to .tx using maketx.exe
 # Insert this file into the folder containing the images you want to converted
 # Change the $cmd variable to the location of your maketx.exe
@@ -15,7 +15,7 @@ ForEach-Object {
     $arg2 = '-u'
     $arg3 = '--oiio'
     $arg4 = '-o'        
-    $cmd = "C:\solidangle\mtoadeploy\2017\bin\maketx.exe"
+    $cmd = "C:\ProgramData\Autodesk\ApplicationPlugins\MAXtoA\maketx.exe"
 
     # Check if the current index is a file and not a folder
     if (Test-Path -Path $file -PathType Leaf) {
@@ -39,3 +39,6 @@ ForEach-Object {
         }
     }
 }
+
+Write-Output "MakeTX_batch.ps1 has completed its task!"
+Read-Host -Prompt "Press Enter to exit!"
